@@ -1,0 +1,2 @@
+# inventory
+Dockerized inventory microservice.
