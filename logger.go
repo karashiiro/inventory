@@ -7,7 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func initLogging() *os.File {
+func initLogging() (*os.File, error) {
 	log.SetReportCaller(true)
 	log.SetFormatter(&log.JSONFormatter{})
 
@@ -21,10 +21,10 @@ func initLogging() *os.File {
 	var logFile *os.File
 	logFile, err = os.OpenFile("log/inventory.log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
 
 	log.SetOutput(io.MultiWriter(os.Stdout, logFile))
 
-	return logFile
+	return logFile, nil
 }
