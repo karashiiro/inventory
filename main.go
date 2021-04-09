@@ -21,7 +21,7 @@ func initLogging() *os.File {
 	var logFile *os.File
 	logFile, err = os.OpenFile("log/inventory.log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 
 	log.SetOutput(io.MultiWriter(os.Stdout, logFile))
