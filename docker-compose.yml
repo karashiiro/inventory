@@ -12,7 +12,7 @@ services:
     image: inventory
     restart: always
     environment:
-      INVENTORY_PGL_CONNECTION_STRING: host=localhost user=postgres password=inventory dbname=inventory port=9920 sslmode=disable TimeZone=America/Los_Angeles
+      INVENTORY_PGL_CONNECTION_STRING: host=localhost user=postgres password=inventory dbname=postgres port=9920 sslmode=disable TimeZone=America/Los_Angeles
     depends_on:
       - postgresql
       - redis
