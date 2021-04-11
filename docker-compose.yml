@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  postgresql:
+  postgres:
     image: postgres:13.2
     restart: always
     environment:
@@ -12,9 +12,9 @@ services:
     image: inventory
     restart: always
     environment:
-      INVENTORY_PGL_CONNECTION_STRING: host=localhost user=postgres password=inventory dbname=postgres port=9920 sslmode=disable TimeZone=America/Los_Angeles
+      INVENTORY_PGL_CONNECTION_STRING: host=postgres user=postgres password=inventory dbname=postgres port=9920 sslmode=disable TimeZone=America/Los_Angeles
     depends_on:
-      - postgresql
+      - postgres
       - redis
     volumes:
       - type: volume
