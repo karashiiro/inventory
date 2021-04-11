@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io"
 	"os"
 
 	log "github.com/sirupsen/logrus"
@@ -24,7 +23,7 @@ func initLogging() (*os.File, error) {
 		return nil, err
 	}
 
-	log.SetOutput(io.MultiWriter(os.Stdout, logFile))
+	log.SetOutput(logFile)
 
 	return logFile, nil
 }
