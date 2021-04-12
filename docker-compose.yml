@@ -13,6 +13,7 @@ services:
     restart: always
     environment:
       INVENTORY_PGL_CONNECTION_STRING: host=postgres user=postgres password=inventory dbname=postgres port=5432 sslmode=disable TimeZone=America/Los_Angeles
+      INVENTORY_REDIS_LOCATION: redis:6379
     depends_on:
       - postgres
       - redis
