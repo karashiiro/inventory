@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.DEFAULT_GOAL := help 
+.DEFAULT_GOAL := help
 
 help: ## Show this help
 	@echo Dependencies: go docker
