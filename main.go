@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"time"
 
+	"github.com/karashiiro/inventory/message"
 	log "github.com/sirupsen/logrus"
 	"github.com/streadway/amqp"
 )
@@ -44,6 +46,10 @@ func openChannel(url string, channelName string) (<-chan amqp.Delivery, error) {
 	return msgs, nil
 }
 
+func logFailedAck(err error, corrID string) {
+	log.Printf("message ack could not be delivered to channel\n\terror: %v\n\tcorrelation_id: ", err, corrID)
+}
+
 func main() {
 	// Start logger
 	logFile, err := initLogging()
@@ -69,7 +75,31 @@ func main() {
 
 	go func() {
 		for d := range msgs {
-			log.Println(d)
+			m := &message.Message{}
+			err := json.Unmarshal(d.Body, m)
+			if err != nil {
+				log.Printf("failed to unmarshal message\n\terror: %v\n\tcorrelation_id: ", err, d.CorrelationId)
+				err = d.Reject(false)
+				if err != nil {
+					logFailedAck(err, d.CorrelationId)
+				}
+				continue
+			}
+
+			switch {
+			default:
+				log.Printf("failed to unmarshal message\n\tunk_msg: %v\n\tcorrelation_id: ", string(d.Body), d.CorrelationId)
+				err = d.Reject(false)
+				if err != nil {
+					logFailedAck(err, d.CorrelationId)
+				}
+				continue
+			}
+
+			err = d.Ack(false)
+			if err != nil {
+				logFailedAck(err, d.CorrelationId)
+			}
 		}
 	}()
 
