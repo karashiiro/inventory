@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/karashiiro/inventory/message"
@@ -50,6 +51,20 @@ func logFailedAck(err error, corrID string) {
 	log.Printf("message ack could not be delivered to channel\n\terror: %v\n\tcorrelation_id: ", err, corrID)
 }
 
+func parseRequestArgs(args []string) (uint32, uint32, error) {
+	itemID, err := strconv.ParseUint(args[0], 10, 32)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	quantity, err := strconv.ParseUint(args[1], 10, 32)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return uint32(itemID), uint32(quantity), nil
+}
+
 func main() {
 	// Start logger
 	logFile, err := initLogging()
@@ -86,7 +101,34 @@ func main() {
 				continue
 			}
 
-			switch {
+			switch m.Command {
+			case "add":
+				_, _, err = parseRequestArgs(m.Args)
+				if err != nil {
+					err = d.Reject(false)
+					if err != nil {
+						logFailedAck(err, d.CorrelationId)
+					}
+					continue
+				}
+			case "get":
+				_, _, err = parseRequestArgs(m.Args)
+				if err != nil {
+					err = d.Reject(false)
+					if err != nil {
+						logFailedAck(err, d.CorrelationId)
+					}
+					continue
+				}
+			case "remove":
+				_, _, err = parseRequestArgs(m.Args)
+				if err != nil {
+					err = d.Reject(false)
+					if err != nil {
+						logFailedAck(err, d.CorrelationId)
+					}
+					continue
+				}
 			default:
 				log.Printf("failed to unmarshal message\n\tunk_msg: %v\n\tcorrelation_id: ", string(d.Body), d.CorrelationId)
 				err = d.Reject(false)
