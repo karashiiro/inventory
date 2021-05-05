@@ -41,3 +41,15 @@ func initDatabase() (*Database, error) {
 		c:  c,
 	}, nil
 }
+
+func (d *Database) AddItem(itemID, quantity uint32) error {
+	return nil
+}
+
+func (d *Database) GetItemQuantity(itemID uint32) (uint32, error) {
+	return 0, nil
+}
+
+func (d *Database) ConsumeItem(itemID, quantity uint32) error {
+	return nil
+}

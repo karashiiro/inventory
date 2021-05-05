@@ -57,9 +57,12 @@ func parseRequestArgs(args []string) (uint32, uint32, error) {
 		return 0, 0, err
 	}
 
-	quantity, err := strconv.ParseUint(args[1], 10, 32)
-	if err != nil {
-		return 0, 0, err
+	quantity := uint64(0)
+	if len(args) > 1 {
+		quantity, err = strconv.ParseUint(args[1], 10, 32)
+		if err != nil {
+			return 0, 0, err
+		}
 	}
 
 	return uint32(itemID), uint32(quantity), nil
